@@ -6,10 +6,26 @@ import Loading from "./components/Loading";
 
 const App = () => {
   const [authStatus, setAuthStatus] = useState("checking");
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/profile", {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setAuthStatus("authenticated");
+      } else {
+        setAuthStatus("unauthenticated");
+      }
+    } catch (error) {
+      console.error("Error de conexión, no se pudo verificar la sesión", error);
+      setAuthStatus("unauthenticated");
+    }
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      setAuthStatus("unauthenticated"); 
-    }, 1000);
+    checkAuth();
   }, []);
 
   const handleLogin = () => {
@@ -21,7 +37,11 @@ const App = () => {
   };
 
   if (authStatus === "checking") {
-    return <Loading />;
+    return (
+      <div className="min-vh-100 bg-dark d-flex align-items-center justify-content-center">
+        <Loading />
+      </div>
+    );
   }
 
   return (

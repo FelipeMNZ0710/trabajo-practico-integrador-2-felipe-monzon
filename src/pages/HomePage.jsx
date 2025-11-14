@@ -1,102 +1,157 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Loading from "../components/Loading";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useForm from "../hooks/useForm";
 
-const HomePage = () => {
-  const [userData, setUserData] = useState(null);
-  const [tasks, setTasks] = useState([]);
+export default function Home() {
+  const [stats, setStats] = useState({
+    total: 0,
+    completed: 0,
+    pending: 0,
+  });
   const [loading, setLoading] = useState(true);
-  const loadHomeData = async () => {
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const { values, handleChange, handleReset } = useForm({
+    title: "",
+    description: "",
+    is_completed: false,
+  });
+
+  const fetchStats = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/tasks/stats", {
+      credentials: "include",
+    });
+
+    if (res.status === 401) { // si no está autenticado
+      navigate("/login");      // redirige al login
+      return;                  // y no intenta leer JSON
+    }
+
+    const data = await res.json();
+    setStats(data);
+  } catch (err) {
+    console.error("Error trayendo estadísticas", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const profilePromise = fetch("http://localhost:3000/api/profile", {
+      setLoading(true);
+      await fetch("http://localhost:3000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify(values),
       });
-      const tasksPromise = fetch("http://localhost:3000/api/tasks-by-user", {
-        credentials: "include",
-      });
-      const [profileRes, tasksRes] = await Promise.all([
-        profilePromise,
-        tasksPromise,
-      ]);
-      if (profileRes.ok) {
-        const profileData = await profileRes.json();
-        setUserData(profileData.user);
-      } else {
-        console.error("Error al cargar el perfil");
-      }
-      if (tasksRes.ok) {
-        const tasksData = await tasksRes.json();
-        setTasks(
-          tasksData.tasks || (Array.isArray(tasksData) ? tasksData : [])
-        );
-      } else {
-        console.error("Error al cargar las tareas");
-      }
-    } catch (error) {
-      console.error("Error en las peticiones de Home:", error);
+      handleReset();
+      setShowModal(false);
+      fetchStats();
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    loadHomeData();
-  }, []);
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((task) => task.is_completed).length;
-  const pendingTasks = totalTasks - completedTasks;
-
-  if (loading) {
-    return (
-      <main className="min-vh-100 bg-dark text-white p-4 position-relative">
-        <Loading />
-      </main>
-    );
-  }
+  if (loading) return <p>Cargando datos…</p>;
 
   return (
-    <div className="container mt-5 pt-5 text-white">
-      <h1 className="display-5 text-center mb-5">
-        Bienvenido,{" "}
-        <span className="text-danger">{userData?.name || "Usuario"}</span>
-      </h1>
+    <div className="home-wrapper">
 
-      <div className="row text-center">
-        <div className="col-md-4 mb-4">
-          <div className="card bg-secondary h-100">
-            <div className="card-body">
-              <h3 className="display-1 fw-bold text-danger">{totalTasks}</h3>
-              <p className="h5 text-white-50 mt-2">Total de Tareas</p>
+      <header className="home-header">
+        <h1>Panel General</h1>
+        <p>Bienvenido, aquí verás el estado general de tus tareas.</p>
+      </header>
+
+      <div className="home-columns">
+
+        <section className="home-section">
+          <h2>Estado Actual</h2>
+
+          <div className="data-list">
+            <div className="data-item">
+              <span className="label">Total de tareas:</span>
+              <span className="value">{stats.total}</span>
+            </div>
+
+            <div className="data-item">
+              <span className="label">Completadas:</span>
+              <span className="value">{stats.completed}</span>
+            </div>
+
+            <div className="data-item">
+              <span className="label">Pendientes:</span>
+              <span className="value">{stats.pending}</span>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="col-md-4 mb-4">
-          <div className="card bg-secondary h-100">
-            <div className="card-body">
-              <h3 className="display-1 fw-bold text-success">{completedTasks}</h3>
-              <p className="h5 text-white-50 mt-2">Completadas</p>
-            </div>
-          </div>
-        </div>
+        <aside className="home-section">
+          <h2>Acciones rápidas</h2>
 
-        <div className="col-md-4 mb-4">
-          <div className="card bg-secondary h-100">
-            <div className="card-body">
-              <h3 className="display-1 fw-bold text-warning">{pendingTasks}</h3>
-              <p className="h5 text-white-50 mt-2">Pendientes</p>
-            </div>
+          <div className="actions">
+            <button onClick={() => navigate("/tasks")}>
+              Ver todas las tareas
+            </button>
+            <button onClick={() => setShowModal(true)}>
+              Crear nueva tarea
+            </button>
           </div>
-        </div>
+        </aside>
       </div>
-      
-      <div className="text-center mt-4">
-        <Link to="/tasks" className="btn btn-danger btn-lg">
-          Ir a mis Tareas
-        </Link>
-      </div>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Crear nueva tarea</h3>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="title"
+                value={values.title}
+                onChange={handleChange}
+                placeholder="Título"
+                required
+              />
+              <textarea
+                name="description"
+                value={values.description}
+                onChange={handleChange}
+                placeholder="Descripción"
+                required
+              />
+              <div>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="is_completed"
+                    checked={values.is_completed}
+                    onChange={handleChange}
+                  />
+                  Completada
+                </label>
+              </div>
+              <div className="modal-actions">
+                <button type="submit">Guardar</button>
+                <button type="button" onClick={() => setShowModal(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
-};
-
-export default HomePage;
+}

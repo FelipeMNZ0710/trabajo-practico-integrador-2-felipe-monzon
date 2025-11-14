@@ -6,13 +6,10 @@ const useForm = (initialValues = {}) => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    setValues((prevValues) => ({ ...prevValues, [name]: newValue }));
-    setValues({ ...values, [name]: newValue });
+    setValues((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  const handleReset = () => {
-    setValues(initialValues);
-  };
+  const handleReset = () => setValues(initialValues);
 
   return { values, setValues, handleChange, handleReset };
 };

@@ -19,7 +19,7 @@ const App = () => {
         setAuthStatus("unauthenticated");
       }
     } catch (error) {
-      console.error("Error de conexión, no se pudo verificar la sesión", error);
+      console.error(error);
       setAuthStatus("unauthenticated");
     }
   };
@@ -28,36 +28,23 @@ const App = () => {
     checkAuth();
   }, []);
 
-  const handleLogin = () => {
-    setAuthStatus("authenticated");
-  };
-
-  const handleLogout = () => {
-    setAuthStatus("unauthenticated");
-  };
+  const handleLogin = () => setAuthStatus("authenticated");
+  const handleLogout = () => setAuthStatus("unauthenticated");
 
   if (authStatus === "checking") {
     return (
-      <div className="min-vh-100 bg-dark d-flex align-items-center justify-content-center">
+      <div className="min-vh-100 d-flex align-items-center justify-content-center">
         <Loading />
       </div>
     );
   }
 
   return (
-    <div className="d-flex flex-column min-vh-100 bg-dark">
+    <>
       <Navbar authStatus={authStatus} onLogout={handleLogout} />
-
-      <main className="flex-grow-1">
-        <AppRouter
-          authStatus={authStatus}
-          onLogin={handleLogin}
-          onLogout={handleLogout}
-        />
-      </main>
-
+      <AppRouter authStatus={authStatus} onLogin={handleLogin} onLogout={handleLogout} />
       <Footer />
-    </div>
+    </>
   );
 };
 

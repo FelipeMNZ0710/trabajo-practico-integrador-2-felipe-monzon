@@ -1,0 +1,450 @@
+/* Variables CSS para facilitar la personalización */
+:root {
+  --primary-color: #00ff88; /* Verde vibrante */
+  --secondary-color: #006eff; /* Azul eléctrico */
+  --bg-dark: #1a1a2e; /* Fondo oscuro principal */
+  --bg-card: #16213e; /* Fondo más claro para tarjetas/secciones */
+  --border-color: #0f4; /* Borde sutil */
+  --text-light: #e0e0e0; /* Texto claro */
+  --text-muted: #a0a0a0; /* Texto secundario/opaco */
+  --hover-bg: rgba(0, 255, 136, 0.15); /* Fondo al pasar el ratón */
+  --font-family: 'Inter', sans-serif; /* Fuente moderna */
+  --border-radius: 8px;
+  --danger-color: #ff4d4f; /* Color para acciones de peligro (ej. eliminar) */
+  --success-color: #52c41a; /* Color para acciones de éxito */
+}
+
+/* Estilos globales */
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Contenedor principal de la página */
+.home-wrapper {
+  max-width: 1000px; /* Un poco más ancho */
+  margin: 2rem auto; /* Más margen superior/inferior */
+  padding: 2rem;
+  color: var(--secondary-color);
+  background-color: var(--bg-dark); /* Asegura que el fondo sea oscuro */
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+}
+
+/* Encabezado principal */
+.home-header h1 {
+  margin-bottom: 0.8rem; /* Espacio debajo del título */
+  color: var(--primary-color);
+  font-size: 2.8rem; /* Título más grande */
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); /* Efecto de brillo */
+}
+
+/* Subtítulo o descripción */
+.home-header p {
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Layout de columnas para secciones */
+.home-columns {
+  margin-top: 3rem; /* Más espacio superior */
+  display: grid;
+  grid-template-columns: 1fr 0.8fr; /* Ajuste para la segunda columna */
+  gap: 2.5rem; /* Mayor separación entre columnas */
+
+  /* Responsive para pantallas pequeñas */
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+}
+
+/* Estilo para cada sección/tarjeta */
+.home-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 2rem; /* Más padding */
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.home-section:hover {
+  transform: translateY(-5px); /* Efecto al pasar el ratón */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Títulos dentro de las secciones */
+.home-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem; /* Más espacio debajo del título de sección */
+  font-size: 1.8rem;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+  padding-bottom: 0.7rem;
+}
+
+/* Lista de datos (por ejemplo, estadísticas) */
+.data-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem; /* Mayor separación entre elementos de la lista */
+}
+
+/* Cada elemento de la lista de datos */
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alineación vertical */
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(0, 60, 60, 0.5); /* Borde más sutil */
+  transition: background-color 0.2s ease-in-out;
+}
+
+.data-item:last-child {
+  border-bottom: none; /* Elimina el borde del último elemento */
+}
+
+.data-item:hover {
+  background-color: rgba(0, 255, 136, 0.05); /* Fondo sutil al pasar el ratón */
+  border-radius: 4px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Etiqueta del dato */
+.label {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* Valor del dato */
+.value {
+  font-weight: 600; /* Menos negrita, más moderno */
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+/* Contenedor de botones de acción */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem; /* Mayor separación entre botones */
+  margin-top: 2rem; /* Espacio superior */
+}
+
+/* Estilo de los botones */
+.actions button {
+  padding: 1rem 1.5rem; /* Más padding para botones */
+  border: 1px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase; /* Texto en mayúsculas */
+  letter-spacing: 0.05em; /* Espaciado entre letras */
+}
+
+.actions button:hover {
+  background: var(--hover-bg);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+  transform: translateY(-2px);
+  color: var(--text-light); /* Color de texto más claro en hover */
+}
+
+.actions button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+/* Utility classes (puedes agregarlas o eliminarlas según necesites) */
+.text-center {
+  text-align: center;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+/* Animaciones de carga (ejemplo para un spinner) */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 255, 136, 0.2);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+  display: block;
+}
+
+/* --- Estilos para el MODAL --- */
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Fondo más oscuro para mayor contraste */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px); /* Efecto de desenfoque en el fondo */
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+/* Animación para el overlay */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal content */
+.modal-content {
+  background: var(--bg-card);
+  padding: 2.5rem; /* Más padding para un look más espacioso */
+  border-radius: var(--border-radius);
+  max-width: 550px; /* Un poco más ancho */
+  width: 90%;
+  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.45); /* Sombra más pronunciada */
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  animation: modalSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Animación más dinámica */
+  position: relative; /* Para posibles elementos de cierre */
+}
+
+/* Animación de apertura del modal */
+@keyframes modalSlideIn {
+  from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Título del modal (si lo tienes) */
+.modal-content h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+  padding-bottom: 1rem;
+}
+
+/* Inputs y textarea dentro del modal */
+.modal-content input:not([type="checkbox"]),
+.modal-content textarea,
+.modal-content select { /* Añadido select por si acaso */
+  width: calc(100% - 2rem); /* Ajuste para el padding interno */
+  padding: 0.9rem 1rem; /* Más padding vertical */
+  margin-bottom: 1.2rem; /* Más espacio entre campos */
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 255, 136, 0.3); /* Borde más sutil inicialmente */
+  background: var(--bg-dark); /* Fondo oscuro */
+  color: var(--text-light);
+  font-size: 1.05rem; /* Fuente ligeramente más grande */
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box; /* Importante para width: 100% con padding */
+}
+
+.modal-content input:not([type="checkbox"]):focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.7); /* Sombra más intensa al enfocar */
+  background-color: rgba(0, 255, 136, 0.05); /* Fondo sutil al enfocar */
+}
+
+/* Checkbox */
+.modal-content .checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  color: var(--text-muted);
+}
+
+.modal-content input[type="checkbox"] {
+  appearance: none; /* Oculta el checkbox nativo */
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  margin-right: 0.7rem;
+  position: relative;
+  cursor: pointer;
+  background-color: var(--bg-dark);
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-content input[type="checkbox"]:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.modal-content input[type="checkbox"]:checked::after {
+  content: '✔'; /* Icono de check */
+  color: var(--bg-dark);
+  font-size: 0.8rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-content label {
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Mensajes de error para formularios */
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.9rem;
+  margin-top: -0.8rem; /* Para que esté pegado al input */
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+/* Contenedor de botones del modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem; /* Mayor separación entre botones */
+  margin-top: 2rem; /* Más espacio superior */
+}
+
+/* Botones del modal */
+.modal-actions button {
+  padding: 0.8rem 1.5rem; /* Más padding para un mejor tacto */
+  border-radius: var(--border-radius);
+  border: 1px solid; /* El borde se define con el color específico */
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Estilo para botón primario (Guardar, Confirmar, etc.) */
+.modal-actions .btn-primary {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.modal-actions .btn-primary:hover {
+  background: var(--hover-bg);
+  color: var(--text-light);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Estilo para botón secundario/cerrar (Cancelar) */
+.modal-actions .btn-secondary {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.modal-actions .btn-secondary:hover {
+  background: rgba(160, 160, 160, 0.1);
+  color: var(--text-light);
+  box-shadow: 0 0 8px rgba(160, 160, 160, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Estilo para botón de eliminar/acción peligrosa */
+.modal-actions .btn-danger {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.modal-actions .btn-danger:hover {
+  background: rgba(255, 77, 79, 0.15);
+  color: var(--text-light);
+  box-shadow: 0 0 12px rgba(255, 77, 79, 0.6);
+  transform: translateY(-2px);
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.8rem;
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: var(--border-radius);
+  transition: background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.task-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  margin-right: 0.7rem;
+  background: var(--bg-dark);
+  transition: all 0.2s ease-in-out;
+}
+
+.task-checkbox:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.task-checkbox:checked::after {
+  content: '✔';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bg-dark);
+  font-size: 0.8rem;
+}
+
+.task-title {
+  flex-grow: 1;
+  font-size: 1rem;
+  color: var(--text-light);
+}

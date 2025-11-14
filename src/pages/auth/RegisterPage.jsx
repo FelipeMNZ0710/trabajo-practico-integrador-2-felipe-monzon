@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import Loading from "../../components/Loading";
 
@@ -8,35 +8,62 @@ const RegisterPage = ({ onLoginSuccess }) => {
     username: "",
     email: "",
     password: "",
-    name: "",
+    firstname: "",
     lastname: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !values.username ||
+      !values.email ||
+      !values.password ||
+      !values.firstname ||
+      !values.lastname
+    ) {
+      alert("Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
     setLoading(true);
+
+    const payload = {
+      name: values.firstname,
+      lastname: values.lastname,
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    };
 
     try {
       const res = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(values),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        onLoginSuccess();
-      } else {
-        alert(data.message || "Error en el registro. Verifique los datos.");
+      if (res.status === 201) {
+        alert("Registrado exitosamente");
         handleReset();
+
+        // Llamar login‐success para actualizar estado de autenticación
+        onLoginSuccess();
+
+        navigate("/home");
+        return;
       }
+
+      const data = await res.json();
+      alert(data.message || "Error en el registro");
+      handleReset();
     } catch (err) {
       console.error(err);
-      alert("Error al conectar con el servidor");
+      alert("Error de conexión al servidor");
       handleReset();
     } finally {
       setLoading(false);
@@ -44,107 +71,127 @@ const RegisterPage = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark text-white py-5">
+    <main className="min-vh-100 d-flex align-items-center justify-content-center bg-dark text-light py-5">
       {loading && <Loading />}
 
-      <div className="card bg-secondary p-4 shadow-lg" style={{ width: '100%', maxWidth: '500px' }}>
-        <div className="card-body">
-          <h2 className="card-title text-center h3 mb-3">Crear cuenta</h2>
-          <p className="text-center text-white-50 mb-4">
+      <div
+        className="card bg-secondary bg-opacity-10 border-secondary"
+        style={{ maxWidth: 680, width: "100%" }}
+      >
+        <div className="card-body p-4">
+          <h2 className="card-title text-center mb-2">Crear cuenta</h2>
+          <p className="text-center text-muted mb-4 small">
             Completa los campos para registrarte
           </p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label htmlFor="name" className="form-label">Nombre</label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Juan"
-                  value={values.name}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label htmlFor="lastname" className="form-label">Apellido</label>
-                <input
-                  id="lastname"
-                  name="lastname"
-                  type="text"
-                  placeholder="Pérez"
-                  value={values.lastname}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="form-control"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">Usuario</label>
+          <form onSubmit={handleSubmit} className="row g-3">
+            <div className="col-12 col-md-6">
+              <label
+                htmlFor="username"
+                className="form-label small text-muted"
+              >
+                Usuario
+              </label>
               <input
                 id="username"
                 name="username"
                 type="text"
-                placeholder="juanperez123"
                 value={values.username}
                 onChange={handleChange}
-                disabled={loading}
                 className="form-control"
                 required
               />
             </div>
-            
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
+
+            <div className="col-12 col-md-6">
+              <label htmlFor="email" className="form-label small text-muted">
+                Email
+              </label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="correo@ejemplo.com"
                 value={values.email}
                 onChange={handleChange}
-                disabled={loading}
                 className="form-control"
                 required
               />
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">Contraseña</label>
+            <div className="col-12 col-md-6">
+              <label
+                htmlFor="password"
+                className="form-label small text-muted"
+              >
+                Contraseña
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                placeholder="••••••••"
                 value={values.password}
                 onChange={handleChange}
-                disabled={loading}
                 className="form-control"
                 required
               />
             </div>
 
-            <button type="submit" className="btn btn-danger w-100 mt-3" disabled={loading}>
-              {loading ? "Registrando..." : "Registrarse"}
-            </button>
+            <div className="col-6 col-md-3">
+              <label
+                htmlFor="firstname"
+                className="form-label small text-muted"
+              >
+                Nombre
+              </label>
+              <input
+                id="firstname"
+                name="firstname"
+                type="text"
+                value={values.firstname}
+                onChange={handleChange}
+                className="form-control"
+                required
+              />
+            </div>
+
+            <div className="col-6 col-md-3">
+              <label
+                htmlFor="lastname"
+                className="form-label small text-muted"
+              >
+                Apellido
+              </label>
+              <input
+                id="lastname"
+                name="lastname"
+                type="text"
+                value={values.lastname}
+                onChange={handleChange}
+                className="form-control"
+                required
+              />
+            </div>
+
+            <div className="col-12">
+              <button
+                type="submit"
+                className="btn btn-danger w-100"
+                disabled={loading}
+              >
+                {loading ? "Registrando..." : "Registrarse"}
+              </button>
+            </div>
           </form>
 
-          <p className="text-center text-white-50 mt-4 mb-0">
+          <p className="text-center small text-muted mt-3 mb-0">
             ¿Ya tienes cuenta?{" "}
-            <Link to="/login" className="text-danger fw-bold text-decoration-none">
+            <Link to="/login" className="text-danger fw-medium">
               Iniciar Sesión
             </Link>
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

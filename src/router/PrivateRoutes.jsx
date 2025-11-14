@@ -1,6 +1,8 @@
-import { Navigate, Outlet } from "react--router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const PrivateRoutes = ({ authStatus }) => {
+  if (authStatus === "checking") return <Loading />;
   return authStatus === "authenticated" ? <Outlet /> : <Navigate to="/login" />;
 };
 

@@ -33,20 +33,45 @@ export const login = async (req, res) => {
 export const register = async (req, res) => {
   try {
     const { name, lastname, username, email, password } = req.body;
+
+    // Validar duplicados
+    const existingUser = await UserModel.findOne({
+      where: { username },
+    });
+    if (existingUser) {
+      return res.status(400).json({ message: "El username ya está en uso" });
+    }
+
+    const existingEmail = await UserModel.findOne({
+      where: { email },
+    });
+    if (existingEmail) {
+      return res.status(400).json({ message: "El email ya está en uso" });
+    }
+
+    // Crear persona
     const persona = await PersonModel.create({ name, lastname });
+
+    // Crear usuario
     const user = await UserModel.create({
       username,
       email,
       password,
-      person_id: persona.dataValues.id,
+      person_id: persona.id,
     });
-    // Asignar role 'user' por defecto
+
+    // Asignar rol por defecto si existe
     const roleUser = await UserRoleModel.findOne({ where: { role_id: 2 } });
-    const roles = roleUser.role_id;
-    await UserRoleModel.create({ user_id: user.id, role_id: roles });
+    if (roleUser) {
+      await UserRoleModel.create({ user_id: user.id, role_id: roleUser.role_id });
+    } else {
+      console.warn(`No se encontró el rol por defecto (role_id 2)`);
+    }
+
     return res.status(201).json({ message: "Usuario registrado exitosamente" });
   } catch (error) {
-    return res.status(500).json({ message: "Error al registrar usuario", error });
+    console.error(error);
+    return res.status(500).json({ message: "Error al registrar usuario" });
   }
 };
 
